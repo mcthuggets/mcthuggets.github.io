@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Excel Search Tool</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    #tableContainer {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .controls {
+      margin-top: 1rem;
+    }
+    .controls label {
+      margin-left: 1rem;
+    }
+    #downloadBtn {
+      margin-top: 1rem;
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Excel Search</h1>
+  <input type="file" id="upload" />
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search..." />
+    <label><input type="checkbox" id="caseSensitive"> Case Sensitive</label>
+    <label><input type="checkbox" id="wholeWord"> Match Whole Word</label>
+  </div>
+  <button id="downloadBtn" style="display: none;">Download Results</button>
+  <div id="tableContainer"></div>
+
+  <script>
+    let excelData = [];
+    let filteredData = [];
+
+    document.getElementById('upload').addEventListener('change', (e) => {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        excelData = XLSX.utils.sheet_to_json(sheet);
+        filteredData = [...excelData];
+        renderTable(filteredData);
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+      };
+      reader.readAsArrayBuffer(e.target.files[0]);
+    });
+
+    document.getElementById('search').addEventListener('input', applyFilters);
+    document.getElementById('caseSensitive').addEventListener('change', applyFilters);
+    document.getElementById('wholeWord').addEventListener('change', applyFilters);
+    document.getElementById('downloadBtn').addEventListener('click', downloadExcel);
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('search').value;
+      const isCaseSensitive = document.getElementById('caseSensitive').checked;
+      const isWholeWord = document.getElementById('wholeWord').checked;
+
+      if (!searchTerm) {
+        filteredData = [...excelData];
+        renderTable(filteredData);
+        return;
+      }
+
+      filteredData = excelData.filter(row =>
+        Object.values(row).some(val => {
+          const strVal = String(val);
+          let compareVal = isCaseSensitive ? strVal : strVal.toLowerCase();
+          let compareTerm = isCaseSensitive ? searchTerm : searchTerm.toLowerCase();
+
+          if (isWholeWord) {
+            const words = compareVal.split(/\s+/);
+            return words.includes(compareTerm);
+          } else {
+            return compareVal.includes(compareTerm);
+          }
+        })
+      );
+
+      renderTable(filteredData);
+    }
+
+    function renderTable(data) {
+      const container = document.getElementById('tableContainer');
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No results found.</p>';
+        return;
+      }
+
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const tbody = document.createElement('tbody');
+
+      const headerRow = document.createElement('tr');
+      Object.keys(data[0]).forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        Object.values(row).forEach(val => {
+          const td = document.createElement('td');
+          td.textContent = val;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(thead);
+      table.appendChild(tbody);
+      container.appendChild(table);
+    }
+
+    function downloadExcel() {
+      const worksheet = XLSX.utils.json_to_sheet(filteredData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "FilteredResults");
+
+      XLSX.writeFile(workbook, "Filtered_Results.xlsx");
+    }
+  </script>
+</body>
+</html>
