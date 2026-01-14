@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <title>Date Confirmed</title>
@@ -16,7 +17,8 @@
             align-items: center;
             background: #e6d9f5;
             font-family: 'Press Start 2P', monospace;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .page {
@@ -146,13 +148,36 @@
                 transform: scale(0.8);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
             }
         }
+
+        @media (max-height: 700px),
+        (max-width: 420px) {
+            .page {
+                padding: 16px 0 24px;
+            }
+
+            .card-container {
+                gap: 16px;
+            }
+
+            .card {
+                width: 240px;
+                height: 150px;
+            }
+
+            .title-box {
+                font-size: 11px;
+                padding: 14px 16px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <!-- MAIN PAGE -->
@@ -247,4 +272,5 @@
         });
     </script>
 </body>
+
 </html>
