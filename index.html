@@ -222,11 +222,11 @@
        STEP 1: Proposal
        ===================== -->
   <section id="step1" class="active">
-    <h1>Hey love 💜</h1>
+    <h1> Aasoosoo 💜</h1>
     <p>Will you be my Valentine?</p>
     <div class="button-row">
       <button onclick="goToStep(2)">Yes 💜</button>
-      <button onclick="goToStep(2)">Of course 🌸</button>
+      <button onclick="goToStep(2)"> I already said yes, bhenchod 🙄 </button>
     </div>
   </section>
 
@@ -235,7 +235,7 @@
        ===================== -->
   <section id="step2">
     <h2>Pick your favourite colour 🌷</h2>
-    <p>For the flowers I’ll get you…</p>
+    <p>... Or else 😠</p>
 
     <div class="colour-grid">
       <div class="colour-swatch" style="background:#ffb3c6" data-colour="Blush Pink"></div>
@@ -253,20 +253,20 @@
        STEP 3: Date Choice
        ===================== -->
   <section id="step3">
-    <h2>Choose our date 💫</h2>
+    <h2>Choose our date  🤔 </h2>
 
     <div class="card" data-date="Picnic under the sky">
       <h3>🌿 A picnic</h3>
       <div class="card-content">
-        <p>Soft blankets, good food, and long conversations while the world slows down.</p>
+        <p>Soft blankets, good food, and a potential sunset  🤔</p>
         <button>Choose this date 💕</button>
       </div>
     </div>
 
     <div class="card" data-date="Lunch and a movie">
-      <h3>🎬 Lunch & a movie</h3>
+      <h3>🎬 Lunch & a scary movie</h3>
       <div class="card-content">
-        <p>Good food, cozy seats, and sneaking glances at each other in the dark.</p>
+        <p> For when you get scared, I pinky promise to only make fun of you for a little bit 🤒 </p>
         <button>Choose this date 💕</button>
       </div>
     </div>
@@ -274,7 +274,7 @@
     <div class="card" data-date="Lunch and bowling">
       <h3>🎳 Lunch & bowling</h3>
       <div class="card-content">
-        <p>Playful competition, laughs, and maybe a winner’s kiss.</p>
+        <p> Loser makes lunch for a week 😉 </p>
         <button>Choose this date 💕</button>
       </div>
     </div>
@@ -314,8 +314,8 @@
      Personalisation Hooks
      ===================== */
   const config = {
-    yourName: "Me",
-    herName: "You 💜"
+    yourName: "Dylan",
+    herName: "Aasiyah 💜"
   };
 
   let selectedColour = null;
@@ -366,7 +366,7 @@
       `Our date: ${selectedDate}\n\n` +
       `I can’t wait 💕`;
 
-    const url = "https://wa.me/?text=" + encodeURIComponent(message);
+    const url = "https://wa.me/27826504866?text=" + encodeURIComponent(message);
 
     goToStep(4);
 
