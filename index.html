@@ -1,401 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Be My Valentine 💜</title>
-
-  <!-- =====================
-       Embedded Styles
-       ===================== -->
+  <meta charset="UTF-8">
+  <title>FormSubmit Test</title>
   <style>
-    :root {
-      --lavender: #e6d9ff;
-      --lavender-dark: #b79cff;
-      --green-soft: #dff5e1;
-      --text-main: #3a2f4d;
-      --white: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, var(--lavender), var(--green-soft));
-      color: var(--text-main);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    main {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
       display: flex;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 1.5rem;
+      align-items: center;
+      height: 100vh;
     }
 
-    section {
+    .form-box {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea, button {
       width: 100%;
-      max-width: 420px;
-      background: var(--white);
-      border-radius: 20px;
-      padding: 2rem 1.5rem;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      position: absolute;
-    }
-
-    section.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-      position: relative;
-    }
-
-    h1, h2 {
-      margin-top: 0;
-    }
-
-    p {
-      line-height: 1.5;
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 14px;
     }
 
     button {
-      border: none;
-      border-radius: 999px;
-      padding: 0.8rem 1.4rem;
-      font-size: 1rem;
-      cursor: pointer;
-      background: var(--lavender-dark);
+      background: #007BFF;
       color: white;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-
-    button:active {
-      transform: scale(0.96);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .button-row {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    /* =====================
-       Step 2: Colour Picker
-       ===================== */
-    .colour-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin: 1.5rem 0;
-      justify-items: center;
-    }
-
-    .colour-swatch {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      border: 4px solid transparent;
+      border: none;
       cursor: pointer;
-      transition: transform 0.2s ease, border 0.2s ease;
-    }
-
-    .colour-swatch.selected {
-      border-color: var(--lavender-dark);
-      transform: scale(1.1);
-    }
-
-    /* =====================
-       Step 3: Date Cards
-       ===================== */
-    .card {
-      background: var(--lavender);
-      border-radius: 16px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      text-align: left;
-      cursor: pointer;
-      overflow: hidden;
-      transition: max-height 0.5s ease, background 0.3s ease;
-      max-height: 70px;
-    }
-
-    .card.active {
-      background: var(--green-soft);
-      max-height: 300px;
-    }
-
-    .card h3 {
-      margin: 0;
-    }
-
-    .card-content {
-      opacity: 0;
-      margin-top: 0.8rem;
-      transition: opacity 0.4s ease;
-    }
-
-    .card.active .card-content {
-      opacity: 1;
-    }
-
-    /* =====================
-       Step 5: Celebration
-       ===================== */
-    .photo-placeholder {
-      width: 100%;
-      height: 220px;
-      border-radius: 16px;
-      background: #eee;
-      margin: 1.5rem 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #999;
-      font-size: 0.9rem;
-    }
-
-    .heart {
-      position: absolute;
-      bottom: -20px;
-      width: 16px;
-      height: 16px;
-      background: pink;
-      transform: rotate(45deg);
-      animation: floatUp 6s infinite ease-in;
-      opacity: 0.7;
-    }
-
-    .heart::before,
-    .heart::after {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      background: pink;
-      border-radius: 50%;
-    }
-
-    .heart::before {
-      top: -8px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -8px;
-      top: 0;
-    }
-
-    @keyframes floatUp {
-      from {
-        transform: translateY(0) rotate(45deg);
-        opacity: 0.8;
-      }
-      to {
-        transform: translateY(-110vh) rotate(45deg);
-        opacity: 0;
-      }
     }
   </style>
 </head>
-
 <body>
-<main>
 
-  <!-- =====================
-       STEP 1: Proposal
-       ===================== -->
-  <section id="step1" class="active">
-    <h1> Aasoosoo 💜</h1>
-    <p>Will you be my Valentine?</p>
-    <div class="button-row">
-      <button onclick="goToStep(2)">Yes 💜</button>
-      <button onclick="goToStep(2)"> I already said yes, bhenchod 🙄 </button>
-    </div>
-  </section>
+  <div class="form-box">
+    <h2>Contact Test</h2>
 
-  <!-- =====================
-       STEP 2: Colour Picker
-       ===================== -->
-  <section id="step2">
-    <h2>Pick your favourite colour 🌷</h2>
-    <p>... Or else 😠</p>
+    <form action="https://formsubmit.co/whosdylanreuben@gmail.com" method="POST">
+      
+      <!-- Optional settings -->
+      <input type="hidden" name="_subject" value="New Test Submission">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
 
-    <div class="colour-grid">
-      <div class="colour-swatch" style="background:#ffb3c6" data-colour="Blush Pink"></div>
-      <div class="colour-swatch" style="background:#cdb4db" data-colour="Lavender"></div>
-      <div class="colour-swatch" style="background:#bde0fe" data-colour="Baby Blue"></div>
-      <div class="colour-swatch" style="background:#caffbf" data-colour="Soft Green"></div>
-      <div class="colour-swatch" style="background:#ffd6a5" data-colour="Peach"></div>
-      <div class="colour-swatch" style="background:#fff1a8" data-colour="Sunny Yellow"></div>
-    </div>
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" required></textarea>
 
-    <button id="colourNext" disabled onclick="goToStep(3)">Next 💕</button>
-  </section>
+      <button type="submit">Send</button>
+    </form>
 
-  <!-- =====================
-       STEP 3: Date Choice
-       ===================== -->
-  <section id="step3">
-    <h2>Choose our date  🤔 </h2>
+  </div>
 
-    <div class="card" data-date="Picnic under the sky">
-      <h3>🌿 A picnic</h3>
-      <div class="card-content">
-        <p>Soft blankets, good food, and a potential sunset  🤔</p>
-        <button>Choose this date 💕</button>
-      </div>
-    </div>
-
-    <div class="card" data-date="Lunch and a movie">
-      <h3>🎬 Lunch & a scary movie</h3>
-      <div class="card-content">
-        <p> For when you get scared, I pinky promise to only make fun of you for a little bit 🤒 </p>
-        <button>Choose this date 💕</button>
-      </div>
-    </div>
-
-    <div class="card" data-date="Lunch and bowling">
-      <h3>🎳 Lunch & bowling</h3>
-      <div class="card-content">
-        <p> Loser makes lunch for a week 😉 </p>
-        <button>Choose this date 💕</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- =====================
-       STEP 4: WhatsApp
-       ===================== -->
-  <section id="step4">
-    <h2>Sending this to WhatsApp 💌</h2>
-    <p>If it didn’t open automatically, tap below:</p>
-    <button id="whatsappFallback">Send via WhatsApp</button>
-  </section>
-
-  <!-- =====================
-       STEP 5: Celebration
-       ===================== -->
-  <section id="step5">
-    <h1>It’s a date 💜</h1>
-    <p>I can’t wait to spend it with you.</p>
-
-    <img 
-  src="dyl and aas.png" 
-  alt="Dylan and Aas together" 
-  style="width:100%; height:220px; object-fit:cover; border-radius:16px;"
-/>
-
-  </section>
-
-</main>
-
-<!-- =====================
-     Embedded JavaScript
-     ===================== -->
-<script>
-  /* =====================
-     Personalisation Hooks
-     ===================== */
-  const config = {
-    yourName: "Dylan",
-    herName: "Aasiyah 💜"
-  };
-
-  let selectedColour = null;
-  let selectedDate = null;
-
-  function goToStep(step) {
-    document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
-    document.getElementById("step" + step).classList.add("active");
-  }
-
-  /* =====================
-     Colour Selection Logic
-     ===================== */
-  document.querySelectorAll(".colour-swatch").forEach(swatch => {
-    swatch.addEventListener("click", () => {
-      document.querySelectorAll(".colour-swatch").forEach(s => s.classList.remove("selected"));
-      swatch.classList.add("selected");
-      selectedColour = swatch.dataset.colour;
-      document.getElementById("colourNext").disabled = false;
-    });
-  });
-
-  /* =====================
-     Date Card Logic
-     ===================== */
-  document.querySelectorAll(".card").forEach(card => {
-    card.addEventListener("click", (e) => {
-      if (e.target.tagName === "BUTTON") {
-        selectedDate = card.dataset.date;
-        triggerWhatsApp();
-        return;
-      }
-
-      document.querySelectorAll(".card").forEach(c => {
-        if (c !== card) c.classList.remove("active");
-      });
-      card.classList.toggle("active");
-    });
-  });
-
-  /* =====================
-     WhatsApp Deeplink
-     ===================== */
-  function triggerWhatsApp() {
-    const message =
-      `She said YES 💜\n\n` +
-      `Favourite colour: ${selectedColour}\n` +
-      `Our date: ${selectedDate}\n\n` +
-      `I can’t wait 💕`;
-
-    const url = "https://wa.me/27826504866?text=" + encodeURIComponent(message);
-
-    goToStep(4);
-
-    window.open(url, "_blank");
-
-    document.getElementById("whatsappFallback").onclick = () => {
-      window.open(url, "_blank");
-    };
-
-    setTimeout(() => {
-      goToStep(5);
-      launchHearts();
-    }, 1200);
-  }
-
-  /* =====================
-     Floating Hearts (CSS-only animation, JS spawn)
-     ===================== */
-  function launchHearts() {
-    for (let i = 0; i < 20; i++) {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (4 + Math.random() * 3) + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 7000);
-    }
-  }
-</script>
 </body>
 </html>
