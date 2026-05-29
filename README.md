@@ -1,7 +1,5 @@
 # Hello Eepy ❤️
 
-A romantic single-page website surprise for Eepy, featuring animated countdown, photo gallery, and heartfelt messages.
-
 ## 📋 Overview
 
 This is a modern, responsive single-page website built with vanilla HTML, CSS, and JavaScript. It features:
@@ -284,9 +282,5 @@ The website expects background music at `assets/music/song.mp3`.
 ## 📄 License
 
 This project is a personal creation for a special someone. Feel free to modify and customize as needed!
-
----
-
-**Made with ❤️ while waiting for Eepy.**
 
 For questions or customization help, refer to the code comments throughout the files.
