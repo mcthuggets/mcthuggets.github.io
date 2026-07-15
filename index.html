@@ -1,206 +1,1071 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Eepy ❤️</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Data Ecosystem — Knowledge Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F3F5F8;
+    --bg-grid: #E6EAF0;
+    --panel: #FFFFFF;
+    --panel-soft: #F8F9FC;
+    --ink: #10182B;
+    --ink-soft: #4A5570;
+    --muted: #8892A6;
+    --line: #DCE1EA;
+    --indigo: #362FA6;
+    --indigo-deep: #221D6E;
+    --amber: #C98A00;
+    --amber-soft: #FFF4DC;
+    --coral: #D6462B;
+    --coral-soft: #FCE7E2;
+    --green: #1E7A4C;
+    --green-soft: #E3F4EA;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(16,24,43,0.04), 0 8px 24px -12px rgba(16,24,43,0.12);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    background:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px) 0 0/100% 44px,
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px) 0 0/44px 100%,
+      var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px 90px;
+  }
+
+  /* ---------- Header / signal path ---------- */
+  .masthead{
+    margin-bottom: 34px;
+  }
+  .eyebrow{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-soft);
+  }
+  h1{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(28px, 5vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    line-height: 1.08;
+  }
+  .sub{
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  /* Pipeline / signal path tracker */
+  .pipeline{
+    margin-top: 28px;
+    display:flex;
+    align-items: center;
+  }
+  .pipe-node{
+    position: relative;
+    flex: 1;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 8px;
+  }
+  .pipe-track{
+    position:absolute;
+    top: 14px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background: var(--line);
+    z-index: 0;
+  }
+  .pipe-node:last-child .pipe-track{ display:none; }
+  .pipe-track-fill{
+    position:absolute;
+    top:0; left:0;
+    height:100%;
+    width: 0%;
+    background: var(--indigo);
+    transition: width .5s ease;
+  }
+  .pipe-dot{
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 2px solid var(--line);
+    z-index: 1;
+    display:flex; align-items:center; justify-content:center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    transition: all .35s ease;
+  }
+  .pipe-node.active .pipe-dot{
+    border-color: var(--indigo);
+    color: var(--indigo);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(54,47,166,0.10);
+  }
+  .pipe-node.done .pipe-dot{
+    border-color: var(--indigo);
+    background: var(--indigo);
+    color: #fff;
+  }
+  .pipe-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align:center;
+  }
+  .pipe-node.active .pipe-label, .pipe-node.done .pipe-label{ color: var(--ink); }
+
+  /* ---------- Intro screen ---------- */
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+  }
+  .intro-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 22px 0 26px;
+  }
+  @media (max-width:560px){ .intro-grid{ grid-template-columns: 1fr; } }
+  .stage-chip{
+    border: 1px solid var(--line);
+    background: var(--panel-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stage-chip .n{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--indigo);
+    letter-spacing: 0.08em;
+  }
+  .stage-chip .t{
+    font-weight: 600;
+    font-size: 14.5px;
+    margin-top: 3px;
+  }
+  .stage-chip .c{
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 2px;
+  }
+  .meta-row{
+    display:flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    margin-bottom: 22px;
+  }
+  .meta-row b{ color: var(--ink); }
+
+  .btn{
+    appearance:none;
+    border: none;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 10px;
+    padding: 13px 22px;
+    background: var(--indigo);
+    color: #fff;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .btn:hover{ background: var(--indigo-deep); }
+  .btn:active{ transform: translateY(1px); }
+  .btn.secondary{
+    background: transparent;
+    color: var(--indigo);
+    border: 1.5px solid var(--indigo);
+  }
+  .btn.secondary:hover{ background: #EEEDFB; }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-row{ display:flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ---------- Question screen ---------- */
+  .qhead{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .qbadge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--indigo);
+    background: #EEEDFB;
+    border: 1px solid #DAD7F5;
+    padding: 5px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .qcount{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .qtext{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0 0 22px;
+  }
+  .options{ display:flex; flex-direction:column; gap: 10px; margin-bottom: 6px; }
+  .opt{
+    text-align:left;
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    border: 1.5px solid var(--line);
+    background: var(--panel-soft);
+    border-radius: 10px;
+    padding: 13px 15px;
+    cursor:pointer;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+    transition: border-color .12s ease, background .12s ease, transform .06s ease;
+    font-family: inherit;
+  }
+  .opt:hover:not(:disabled){ border-color: var(--indigo); background: #F4F3FC; }
+  .opt:active:not(:disabled){ transform: translateY(1px); }
+  .opt .letter{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    font-weight:600;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    background:#fff;
+    width: 22px; height:22px;
+    border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    margin-top: 1px;
+  }
+  .opt.correct{
+    border-color: var(--green);
+    background: var(--green-soft);
+  }
+  .opt.correct .letter{ background: var(--green); border-color: var(--green); color:#fff; }
+  .opt.incorrect{
+    border-color: var(--coral);
+    background: var(--coral-soft);
+  }
+  .opt.incorrect .letter{ background: var(--coral); border-color: var(--coral); color:#fff; }
+  .opt.dim{ opacity: .55; }
+  .opt:disabled{ cursor:default; }
+
+  .feedback{
+    margin-top: 18px;
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    background: var(--panel-soft);
+    animation: rise .25s ease;
+  }
+  @keyframes rise{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .feedback.correct{ border-color: #BFE3CC; background: var(--green-soft); }
+  .feedback.incorrect{ border-color: #F2C6BA; background: var(--coral-soft); }
+  .fb-title{
+    font-weight: 700;
+    font-size: 14.5px;
+    margin-bottom: 6px;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .feedback.correct .fb-title{ color: var(--green); }
+  .feedback.incorrect .fb-title{ color: var(--coral); }
+  .fb-body{ font-size: 14.5px; color: var(--ink-soft); line-height: 1.5; }
+  .fb-ref{
+    margin-top: 10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--indigo);
+    border-top: 1px dashed var(--line);
+    padding-top: 10px;
+  }
+
+  .qfoot{
+    margin-top: 22px;
+    display:flex;
+    justify-content: flex-end;
+  }
+
+  /* ---------- Results / dashboard ---------- */
+  .dash-top{
+    display:flex;
+    gap: 22px;
+    align-items:center;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+  }
+  .score-ring{
+    width: 108px; height: 108px;
+    border-radius: 50%;
+    flex-shrink:0;
+    background: conic-gradient(var(--indigo) calc(var(--pct,0)*1%), var(--line) 0);
+    display:flex; align-items:center; justify-content:center;
+    position: relative;
+  }
+  .score-ring::after{
+    content:"";
+    position:absolute;
+    inset:9px;
+    border-radius:50%;
+    background: var(--panel);
+  }
+  .score-ring .num{
+    position:relative;
+    z-index:1;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size: 24px;
+  }
+  .dash-summary h2{
+    font-family:'Space Grotesk', sans-serif;
+    margin: 0 0 6px;
+    font-size: 22px;
+  }
+  .dash-summary p{ margin:0; color:var(--ink-soft); font-size: 14.5px; }
+
+  .gauge-row{
+    display:flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .gauge{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+  }
+  .gauge .glabel{
+    width: 128px;
+    flex-shrink:0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .gauge .gtrack{
+    flex:1;
+    height: 8px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow:hidden;
+  }
+  .gauge .gfill{
+    height:100%;
+    background: var(--indigo);
+    border-radius:999px;
+    transition: width .6s ease;
+  }
+  .gauge .gscore{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    width: 42px;
+    text-align:right;
+    flex-shrink:0;
+  }
+
+  .review{
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .review h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 16px;
+    margin: 0 0 14px;
+  }
+  .review-item{
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 15px;
+    margin-bottom: 10px;
+    background: var(--panel-soft);
+  }
+  .review-item.wrong{ border-left: 3px solid var(--coral); }
+  .review-item.right{ border-left: 3px solid var(--green); }
+  .ri-top{
+    display:flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13.5px;
+    font-weight:600;
+    margin-bottom: 4px;
+  }
+  .ri-ref{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--indigo);
+    font-weight: 500;
+  }
+  .ri-q{ font-size: 14px; color: var(--ink-soft); margin-bottom: 2px; }
+  .ri-ans{ font-size: 13px; color: var(--muted); }
+  .ri-ans b{ color: var(--ink); font-weight:600; }
+
+  footer.note{
+    text-align:center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .hidden{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
 </head>
 <body>
-    <!-- Background floating hearts -->
-    <div class="floating-hearts-container"></div>
 
-    <!-- Welcome Screen (Section 1) -->
-    <section id="welcome-screen" class="welcome-screen">
-        <div class="welcome-content">
-            <h1 class="welcome-heading">Hello Eepy ❤️</h1>
-            <p class="welcome-subheading">Someone has been counting the days...</p>
-            <p class="welcome-text">The world has been slightly less stinki while you've been away.</p>
-            
-            <div class="heart-button-container">
-                <p class="click-prompt">Click the heart.</p>
-                <button id="heart-button" class="heart-button" aria-label="Click to reveal surprise">
-                    <svg viewBox="0 0 100 100" class="heart-svg">
-                        <path d="M50,90 C25,75 10,60 10,45 C10,30 20,20 30,20 C40,20 45,25 50,35 C55,25 60,20 70,20 C80,20 90,30 90,45 C90,60 75,75 50,90 Z" fill="currentColor"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </section>
+<div class="wrap">
 
-    <!-- Confetti container -->
-    <div id="confetti-container" class="confetti-container"></div>
+  <div class="masthead">
+    <div class="eyebrow"><span class="dot"></span> PDDS &middot; POST GRADUATE DIPLOMA IN DATA SCIENCE</div>
+    <h1>The Data Ecosystem</h1>
+    <p class="sub">A self-check across the four stages of the data lifecycle. Every answer is traced back to the section and subsection it comes from, so you can go straight to the source material.</p>
 
-    <!-- Main content (hidden until heart is clicked) -->
-    <div id="main-content" class="main-content hidden">
-        
-        <!-- Music Controls -->
-        <div class="music-controls-fixed">
-            <button id="music-toggle" class="music-button" aria-label="Toggle music">
-                <span class="music-icon">🎵</span>
-            </button>
-            <div class="volume-slider-container hidden">
-                <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="25" aria-label="Volume control">
-            </div>
-        </div>
+    <div class="pipeline" id="pipeline"><!-- filled by JS --></div>
+  </div>
 
-        <!-- Days Apart Counter (Section 3) -->
-        <section id="days-apart-section" class="section days-apart-section">
-            <div class="section-container">
-                <h2 class="section-title">Days Apart</h2>
-                <div class="days-counter-card">
-                    <div class="counter-item">
-                        <div class="counter-number" id="days-count">0</div>
-                        <div class="counter-label">Days</div>
-                    </div>
-                    <div class="counter-item">
-                        <div class="counter-number" id="hours-count">0</div>
-                        <div class="counter-label">Hours</div>
-                    </div>
-                    <div class="counter-item">
-                        <div class="counter-number" id="minutes-count">0</div>
-                        <div class="counter-label">Minutes</div>
-                    </div>
-                </div>
-                <p class="counter-subtitle">April 4 to June 6, 2026</p>
-            </div>
-        </section>
+  <!-- INTRO -->
+  <div class="card" id="screen-intro">
+    <div class="intro-grid" id="stageGrid"><!-- filled by JS --></div>
+    <div class="meta-row">
+      <span><b id="qTotal"></b> questions</span>
+      <span>Untimed &middot; single pass</span>
+      <span>No sign-in &middot; nothing is saved</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="startBtn">Start the check</button>
+    </div>
+  </div>
 
-        <!-- Photo Gallery (Section 4) -->
-        <section id="gallery-section" class="section gallery-section">
-            <div class="section-container">
-                <h2 class="section-title">Our Adventures</h2>
-                
-                <div class="gallery-wrapper">
-                    <!-- Main carousel -->
-                    <div class="carousel-container">
-                        <button id="prev-button" class="carousel-button prev" aria-label="Previous photo">
-                            <span>‹</span>
-                        </button>
-                        <div class="carousel-track">
-                            <div class="carousel-slides" id="carousel-slides">
-                                <!-- Slides will be generated by JavaScript -->
-                            </div>
-                        </div>
-                        <button id="next-button" class="carousel-button next" aria-label="Next photo">
-                            <span>›</span>
-                        </button>
-                    </div>
+  <!-- QUESTION -->
+  <div class="card hidden" id="screen-quiz">
+    <div class="qhead">
+      <span class="qbadge" id="qStage"></span>
+      <span class="qcount" id="qCount"></span>
+    </div>
+    <p class="qtext" id="qText"></p>
+    <div class="options" id="qOptions"></div>
+    <div class="feedback hidden" id="feedback">
+      <div class="fb-title" id="fbTitle"></div>
+      <div class="fb-body" id="fbBody"></div>
+      <div class="fb-ref" id="fbRef"></div>
+    </div>
+    <div class="qfoot">
+      <button class="btn" id="nextBtn" disabled>Next</button>
+    </div>
+  </div>
 
-                    <!-- Thumbnails -->
-                    <div class="carousel-thumbnails" id="carousel-thumbnails">
-                        <!-- Thumbnails will be generated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Image counter -->
-                <p class="carousel-counter"><span id="current-image">1</span> / <span id="total-images">6</span></p>
-            </div>
-        </section>
-
-        <!-- Lightbox Modal -->
-        <div id="lightbox-modal" class="lightbox-modal hidden">
-            <button id="lightbox-close" class="lightbox-close" aria-label="Close lightbox">&times;</button>
-            <img id="lightbox-image" src="" alt="Full size photo" class="lightbox-image">
-            <button id="lightbox-prev" class="lightbox-nav prev" aria-label="Previous photo">‹</button>
-            <button id="lightbox-next" class="lightbox-nav next" aria-label="Next photo">›</button>
-        </div>
-
-        <!-- Personal Message (Section 5) -->
-        <section id="message-section" class="section message-section">
-            <div class="section-container">
-                <div class="message-card">
-                    <h2 class="message-title">For Eepy</h2>
-                    <div class="message-content" id="message-content">
-                        <p>I'm incredibly proud of you.</p>
-                        <p>You took on a challenge that asked for patience, dedication, and courage, and you saw it through.</p>
-                        <p>Every lesson taught, every early morning, every stressful day, and every victory has brought you closer to becoming the teacher you're meant to be.</p>
-                        <p>While you've been away, there has been a small Eepy-shaped gap in my world.</p>
-                        <p>Thankfully that gap gets a little smaller every day.</p>
-                        <p>And now we're almost at the finish line.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Live Countdown (Section 6) -->
-        <section id="countdown-section" class="section countdown-section">
-            <div class="section-container">
-                <h2 class="section-title">Countdown to Home</h2>
-                <div class="countdown-wrapper">
-                    <div class="countdown-cards" id="countdown-cards">
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-days">0</div>
-                            <div class="countdown-label">Days</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-hours">0</div>
-                            <div class="countdown-label">Hours</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-minutes">0</div>
-                            <div class="countdown-label">Minutes</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-seconds">0</div>
-                            <div class="countdown-label">Seconds</div>
-                        </div>
-                    </div>
-                    <p class="countdown-subtitle">June 6, 2026 • 09:00 AM SAST</p>
-                    <p id="countdown-message" class="countdown-message"></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Welcome-Home Letter (Section 7) -->
-        <section id="letter-section" class="section letter-section">
-            <div class="section-container">
-                <button id="letter-button" class="letter-button">
-                    Open your welcome-home letter 💌
-                </button>
-            </div>
-        </section>
-
-        <!-- Letter Modal -->
-        <div id="letter-modal" class="letter-modal hidden">
-            <div class="letter-envelope">
-                <button id="letter-close" class="letter-close" aria-label="Close letter">&times;</button>
-                <div class="letter-content">
-                    <h2 class="letter-title">Welcome Home, Eepy 💌</h2>
-                    <div class="letter-body" id="letter-body">
-                        <!-- REPLACE WITH PERSONAL LETTER -->
-                        <p>My sweetest, prettiest, baby-est, Eepy,</p>
-                        
-                        <p>As I sit down to write this, I am astonished by how long each day has felt without you.</p>
-                        
-                        <p>Event though it has been from afar, watching you tackle your teaching practicals and building towards the next phase of your life has been a privilege.</p>
-                        
-                        <p>The work you're doing matters. The person you're becoming matters. And most importantly, you matter—not just to me, but to everyone whose life you touch.</p>
-                        
-                        <p>I know that it has been exhausting, but I'm so proud of you and all you've accomplished.</p>
-                        
-                        <p>See you very soon.</p>
-                        
-                        <p> - Poopy ❤️</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer (Section 8) -->
-        <footer id="footer" class="footer">
-            <p>Made with ❤️ while waiting for Eepy.</p>
-            <p>See you soon.</p>
-        </footer>
-
+  <!-- RESULTS -->
+  <div class="card hidden" id="screen-results">
+    <div class="dash-top">
+      <div class="score-ring" id="scoreRing"><span class="num" id="scoreNum">0%</span></div>
+      <div class="dash-summary">
+        <h2 id="scoreHeadline">Run complete</h2>
+        <p id="scoreSub"></p>
+      </div>
     </div>
 
-    <!-- Audio element for background music -->
-    <audio id="background-music" preload="none">
-        <source src="assets/music/song.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <div class="gauge-row" id="gaugeRow"></div>
 
-    <script src="js/script.js"></script>
+    <div class="review">
+      <h3>Answer review</h3>
+      <div id="reviewList"></div>
+    </div>
+
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn secondary" id="restartBtn">Run it again</button>
+    </div>
+  </div>
+
+  <footer class="note">STATELESS &middot; RUNS ENTIRELY IN THIS BROWSER TAB &middot; NOTHING IS TRANSMITTED OR STORED</footer>
+</div>
+
+<script>
+(function(){
+
+  // ---------------------------------------------------------------
+  // Question bank — every item cites the section/subsection it is
+  // anchored to, drawn from "PDDS: Data Ecosystem" course content.
+  // ---------------------------------------------------------------
+  const STAGES = [
+    { key:1, code:"01", name:"Identify",  full:"Identifying the Nature of Data", desc:"§3 · Fundamentals, types, patterns, sources, storage" },
+    { key:2, code:"02", name:"Manage",    full:"Manage Data", desc:"§4 · Processing, validation, compliance, fabric, cloud" },
+    { key:3, code:"03", name:"Visualise", full:"Visualise Data", desc:"§5 · Chart techniques and visualisation trends" },
+    { key:4, code:"04", name:"Interpret", full:"Interpret Data", desc:"§6 · Analysis, reporting, and monitoring" },
+  ];
+
+  const QUESTIONS = [
+    // ---------------- STAGE 1 — IDENTIFYING THE NATURE OF DATA ----------------
+    {
+      stage:1, ref:"§3.1 Fundamentals of Data",
+      q:"According to Kitchin (2021), the word “data” is derived from the Latin word meaning “to give.” What is that root word?",
+      options:["DATUM","DARE","DICO","FACTUM"],
+      correct:1,
+      explain:"Kitchin (2021) traces “data” to the Latin “DARE”, meaning “to give” — distinct from “DATUM”, the word data itself originates from."
+    },
+    {
+      stage:1, ref:"§3.1 Fundamentals of Data",
+      q:"The module describes data as unorganised facts that can take several formats. Which of these is one of the four formats it names?",
+      options:["Metadata","Text","Algorithm","Protocol"],
+      correct:1,
+      explain:"The module lists four formats of data: Text, Numbers, Sounds, and Images."
+    },
+    {
+      stage:1, ref:"§3.2 Types of Data",
+      q:"Which type of data is non-numeric and captures ideas, observations, or characteristics — such as gender or product category?",
+      options:["Quantitative data","Qualitative data","Discrete data","Continuous data"],
+      correct:1,
+      explain:"Qualitative data is text-format and non-numeric in nature, unlike quantitative data which is measurable and numeric."
+    },
+    {
+      stage:1, ref:"§3.2 Types of Data",
+      q:"Hair colour (grey, black, blonde) is used in the module as an example of which data type?",
+      options:["Nominal data","Ordinal data","Discrete data","Continuous data"],
+      correct:0,
+      explain:"Hair colour is nominal data — categories with no inherent order, unlike ordinal data (e.g. education level), which does."
+    },
+    {
+      stage:1, ref:"§3.2 Types of Data",
+      q:"Education level (Bachelors, Masters, Doctorate) is used as an example of which data type?",
+      options:["Nominal data","Continuous data","Ordinal data","Discrete data"],
+      correct:2,
+      explain:"Because these categories have a meaningful order or ranking, education level is classed as ordinal data."
+    },
+    {
+      stage:1, ref:"§3.2 Types of Data",
+      q:"“Pencils in a box” (a count) is the module’s example of which data type?",
+      options:["Discrete data","Continuous data","Nominal data","Ordinal data"],
+      correct:0,
+      explain:"Countable, whole-number values like a pencil count are discrete data, as opposed to continuous data such as temperature."
+    },
+    {
+      stage:1, ref:"§3.3 Patterns of Data",
+      q:"According to the module, what do recurring data patterns primarily allow organisations to do?",
+      options:[
+        "Eliminate the need for further data storage",
+        "Make predictions and recognise cause-and-effect relationships",
+        "Replace primary data with secondary data",
+        "Guarantee complete accuracy in every dataset"
+      ],
+      correct:1,
+      explain:"Data patterns reveal relationships and variations within data, allowing predictions and cause-and-effect reasoning that inform decisions."
+    },
+    {
+      stage:1, ref:"§3.4 Data Sources",
+      q:"Surveys, experiments, interviews, and direct observations are described as examples of which kind of data source?",
+      options:["Secondary source","Primary source","Real-time source","Cloud source"],
+      correct:1,
+      explain:"A primary source gives first-hand, direct data — as opposed to secondary sources, which reuse existing information."
+    },
+    {
+      stage:1, ref:"§3.4 Data Sources",
+      q:"Biographies, documentaries, and government records are the module’s examples of which kind of data source?",
+      options:["Primary source","Real-time source","Secondary source","Online source"],
+      correct:2,
+      explain:"Secondary sources provide information intended for reuse — analysis, comparison, interpretation, or retesting — rather than first-hand collection."
+    },
+    {
+      stage:1, ref:"§3.5 Collection and Storage of Data",
+      q:"Which data collection method is defined as extracting data from websites, following ethical guidelines and permissions?",
+      options:["Sensors","Social media monitoring","Web scraping","Transactions"],
+      correct:2,
+      explain:"Web scraping is the process of extracting website data, and the module specifically flags the need for ethical practice and permission."
+    },
+    {
+      stage:1, ref:"§3.5 Collection and Storage of Data",
+      q:"Which data storage option is described as storing data on remote servers accessed via the internet, with the advantages of scalability and flexibility?",
+      options:["Local storage","Data warehouse","Cloud storage","Relational database"],
+      correct:2,
+      explain:"Cloud storage stores data on remote, internet-accessible servers, giving organisations scalability and flexibility."
+    },
+    {
+      stage:1, ref:"§3.7 Key Points",
+      q:"The section’s key points summarise data as falling into two primary categories, each with distinct functions. What are they?",
+      options:[
+        "Structured and Unstructured",
+        "Quantitative and Qualitative",
+        "Primary and Secondary",
+        "Static and Dynamic"
+      ],
+      correct:1,
+      explain:"The key points restate that data is classified into two primary categories — Quantitative and Qualitative — each serving distinct purposes."
+    },
+
+    // ---------------- STAGE 2 — MANAGE DATA ----------------
+    {
+      stage:2, ref:"§4.1 Manage Data",
+      q:"Which of the following is listed as a benefit of a systematic approach to data management?",
+      options:[
+        "Increased efficiency",
+        "Reduced need for data compliance",
+        "Elimination of data validation",
+        "Removal of security requirements"
+      ],
+      correct:0,
+      explain:"The module lists improved decision-making, increased efficiency, enhanced customer satisfaction, strengthened security, and assured compliance as benefits."
+    },
+    {
+      stage:2, ref:"§4.1 Manage Data",
+      q:"How does the module define data processing?",
+      options:[
+        "Modifying unprocessed data to extract significant, useful information",
+        "Permanently deleting redundant records",
+        "Encrypting data before it is stored",
+        "Visualising raw data without transformation"
+      ],
+      correct:0,
+      explain:"Data processing is defined as converting raw, unprocessed data into a format useful for analysis, reporting, and decision-making."
+    },
+    {
+      stage:2, ref:"§4.2 The Key Steps in Data Processing",
+      q:"Which step in the data processing sequence involves cleaning and organising data that is disorganised or incomplete?",
+      options:["Data Collection","Data Pre-processing","Data Transformation","Result"],
+      correct:1,
+      explain:"Data Pre-processing is where gathered data is cleaned, organised, and formatted for uniformity and reliability."
+    },
+    {
+      stage:2, ref:"§4.2 The Key Steps in Data Processing",
+      q:"Which data processing method involves processing data as soon as it is generated?",
+      options:["Batch processing","Online processing","Real-time processing","Distributed processing"],
+      correct:2,
+      explain:"Real-time processing means data is processed the moment it is generated, unlike batch processing, which runs on scheduled intervals."
+    },
+    {
+      stage:2, ref:"§4.2 The Key Steps in Data Processing",
+      q:"Which data processing method spreads the workload of processing across numerous computers?",
+      options:["Cloud-based processing","Distributed processing","Online processing","Batch processing"],
+      correct:1,
+      explain:"Distributed processing involves distributing data processing work across numerous computers, distinct from cloud-based processing, which uses cloud resources."
+    },
+    {
+      stage:2, ref:"§4.3 Data Validation",
+      q:"Which data validation technique checks that values fall within prescribed limits, such as ages between 0 and 120?",
+      options:["Format check","Range check","Consistency check","Lookup check"],
+      correct:1,
+      explain:"Range checks confirm that data falls within prescribed limitations, such as an acceptable age range."
+    },
+    {
+      stage:2, ref:"§4.3 Data Validation",
+      q:"Which data validation technique ensures values are distinct — for example, no duplicate customer IDs?",
+      options:["Lookup check","Completeness check","Uniqueness check","Consistency check"],
+      correct:2,
+      explain:"Uniqueness checks confirm that data values are distinct, catching issues like duplicate IDs."
+    },
+    {
+      stage:2, ref:"§4.4 Data Compliance",
+      q:"Which regulation focuses on individual rights and data protection within the European Union?",
+      options:["CCPA","HIPAA","GDPR","PCI DSS"],
+      correct:2,
+      explain:"The General Data Protection Regulation (GDPR) focuses on individual rights and data protection within the EU."
+    },
+    {
+      stage:2, ref:"§4.4 Data Compliance",
+      q:"Which regulation is specifically named as safeguarding patient health information?",
+      options:["FERPA","HIPAA","CCPA","GDPR"],
+      correct:1,
+      explain:"The Health Insurance Portability and Accountability Act (HIPAA) safeguards patient health information."
+    },
+    {
+      stage:2, ref:"§4.4 Data Compliance",
+      q:"Which regulation protects the privacy of student education records?",
+      options:["FERPA","PCI DSS","HIPAA","CCPA"],
+      correct:0,
+      explain:"The Family Educational Rights and Privacy Act (FERPA) protects the privacy of student education records."
+    },
+    {
+      stage:2, ref:"§4.5 Data Fabric",
+      q:"What is described as the primary purpose of a data fabric architecture?",
+      options:[
+        "To provide a single, consistent approach to data access, integration, and governance",
+        "To replace all cloud storage with local, on-premises storage",
+        "To manually integrate isolated point solutions",
+        "To remove the need for data governance entirely"
+      ],
+      correct:0,
+      explain:"Data fabric provides a single, consistent approach to data access, integration, and governance across systems, platforms, and locations."
+    },
+    {
+      stage:2, ref:"§4.6 Data Management in the Cloud and Augmented Data Management",
+      q:"Which feature of cloud data management refers to adjusting the number of resources used, up or down, to optimise cost?",
+      options:["Scalability","Elasticity","Accessibility","Security"],
+      correct:1,
+      explain:"Elasticity is the ability to increase or decrease resources as required, in order to optimise costs."
+    },
+    {
+      stage:2, ref:"§4.6 Data Management in the Cloud and Augmented Data Management",
+      q:"What is the stated objective of Augmented Data Management?",
+      options:[
+        "To use AI and machine learning to enhance data quality, efficiency, and decision-making",
+        "To restrict data access to highly technical specialists only",
+        "To eliminate the need for cloud infrastructure",
+        "To replace all human oversight of data pipelines"
+      ],
+      correct:0,
+      explain:"Augmented Data Management uses AI and ML to improve data management procedures, aiming to enhance data quality, efficiency, and decision-making."
+    },
+    {
+      stage:2, ref:"§4.8 Key Points",
+      q:"The section’s key points name three key data compliance regulations. Which set is correct?",
+      options:["GDPR, CCPA, and HIPAA","POPIA, GDPR, and FERPA","PCI DSS, CCPA, and FERPA","HIPAA, GDPR, and PCI DSS"],
+      correct:0,
+      explain:"The key points summary states the key regulations comprise GDPR, CCPA, and HIPAA."
+    },
+
+    // ---------------- STAGE 3 — VISUALISE DATA ----------------
+    {
+      stage:3, ref:"§5.1 Visualise Data",
+      q:"According to IBM (2019), as quoted in the module, data visualisation communicates complex data relationships in a way that is:",
+      options:["Purely numerical","Easy to understand","Restricted to data scientists","Difficult but exhaustive"],
+      correct:1,
+      explain:"IBM's definition, cited in the module, states these visual displays communicate complex, data-driven insights “in a way that is easy to understand.”"
+    },
+    {
+      stage:3, ref:"§5.1 Visualise Data",
+      q:"Miller (2019) lists a set of data visualisation techniques in the module. Which of these is NOT one of them?",
+      options:["Word Cloud","Choropleth Map","Blockchain Ledger","Bullet Graph"],
+      correct:2,
+      explain:"The module lists techniques such as Pie Chart, Heat Map, Choropleth Map, Bullet Graph, and Word Cloud (Miller, 2019) — “Blockchain Ledger” is not among them."
+    },
+    {
+      stage:3, ref:"§5.2 Data Visualisation Trends",
+      q:"Per Gartner (Keen, 2023), by 2024 what proportion of data used for AI is predicted to be synthetic?",
+      options:["10%","60%","1%","45%"],
+      correct:1,
+      explain:"Gartner predicted that by 2024, 60% of data used for AI would be synthetic, up from just 1% in 2021."
+    },
+    {
+      stage:3, ref:"§5.2 Data Visualisation Trends",
+      q:"Which Gartner trend centres on processing data at the point of creation to enable real-time insight?",
+      options:["Responsible AI","Edge AI","Data-Centric AI","Cloud Data Ecosystems"],
+      correct:1,
+      explain:"Edge AI enables processing data at the point of creation — the “edge” — supporting real-time insight and stricter data-privacy needs."
+    },
+    {
+      stage:3, ref:"§5.3 Tasks",
+      q:"Following the chart-matching activity in the module, which chart type is best suited to comparing the market share of different brands?",
+      options:["Line chart","Pie chart","Histogram","Scatter plot"],
+      correct:1,
+      explain:"The module's matching activity pairs “comparing market share of different brands” with a pie chart."
+    },
+    {
+      stage:3, ref:"§5.3 Tasks",
+      q:"In the same activity, which chart type is matched with analysing the relationship between advertising spend and sales?",
+      options:["Bar chart","Treemap","Scatter plot","Geographic map"],
+      correct:2,
+      explain:"The module pairs “analysing the relationship between advertising spending and sales” with a scatter plot."
+    },
+
+    // ---------------- STAGE 4 — INTERPRET DATA ----------------
+    {
+      stage:4, ref:"§6.1 Data Analysis and Interpretation",
+      q:"Which is the FIRST step in the data analysis process, as sequenced in the module?",
+      options:["Data Collection","Define the objectives of analysis","Data Cleaning","Data Communication"],
+      correct:1,
+      explain:"The module's seven-step sequence begins with defining the objectives that the data analysis will help achieve."
+    },
+    {
+      stage:4, ref:"§6.1 Data Analysis and Interpretation",
+      q:"Which step involves identifying and managing missing values, outliers, and inconsistencies in the data?",
+      options:["Data Exploration","Data Cleaning","Data Collection","Data Interpretation"],
+      correct:1,
+      explain:"Data Cleaning is where missing values, outliers, and inconsistencies are identified and handled to produce a uniform dataset."
+    },
+    {
+      stage:4, ref:"§6.2 Data Reporting",
+      q:"Which type of data report provides extensive information on an organisation’s daily operations, generated daily or weekly?",
+      options:["Strategic reports","Analytical reports","Operational reports","Research reports"],
+      correct:2,
+      explain:"Operational reports provide extensive detail on day-to-day operations and are typically generated on a daily or weekly basis."
+    },
+    {
+      stage:4, ref:"§6.2 Data Reporting",
+      q:"Which data report format arranges data systematically into rows and columns?",
+      options:["Text-based format","Tabular format","Graphical format","Dashboard format"],
+      correct:1,
+      explain:"A tabular format arranges data into rows and columns, valued for its simplicity and readability."
+    },
+    {
+      stage:4, ref:"§6.2 Data Reporting",
+      q:"A dashboard report is primarily described as a format that displays:",
+      options:[
+        "Long narrative analysis only",
+        "Key performance indicators (KPIs) and related metrics graphically",
+        "Unprocessed raw data exports",
+        "Legal and regulatory documentation"
+      ],
+      correct:1,
+      explain:"A dashboard report is a graphical display of KPIs and additional metrics, blending charts, graphs, and tables for a concise overview."
+    },
+    {
+      stage:4, ref:"§6.3 Latest Reporting Trend",
+      q:"AI reporting, as described in the module, combines which technologies to turn unstructured data into insight?",
+      options:[
+        "Blockchain and cryptographic hashing",
+        "Modern data processing, machine learning, and natural language processing (NLP)",
+        "Manual spreadsheet formulas only",
+        "Cloud storage services exclusively"
+      ],
+      correct:1,
+      explain:"AI reporting is described as an integrated approach using data processing techniques, machine learning, and NLP to build narratives and visualisations from large datasets."
+    },
+    {
+      stage:4, ref:"§6 Key Points (Interpret Data)",
+      q:"Per the section’s key points, effective data interpretation requires an in-depth understanding of what?",
+      options:[
+        "Only the raw numerical values",
+        "The context around the data — industry standards, historical trends, and external factors",
+        "The reporting software’s licence terms",
+        "The marketing budget for the current quarter"
+      ],
+      correct:1,
+      explain:"The key points state that data interpretation requires understanding the context around the data, including industry standards, historical trends, and external factors."
+    },
+  ];
+
+  // ---------------------------------------------------------------
+  // State (in-memory only — nothing persisted, nothing sent anywhere)
+  // ---------------------------------------------------------------
+  let order = [];
+  let idx = 0;
+  let answers = []; // { qIndex, chosen, correct }
+  let answeredCurrent = false;
+
+  const $ = (id) => document.getElementById(id);
+
+  function shuffledIndices(n){
+    const arr = Array.from({length:n}, (_,i)=>i);
+    // Deterministic order (by stage) is actually preferable for a study tool,
+    // so we keep natural sequence rather than randomising.
+    return arr;
+  }
+
+  // ---------------- Build intro stage grid + pipeline ----------------
+  function renderStageGrid(){
+    const grid = $('stageGrid');
+    grid.innerHTML = STAGES.map(s => {
+      const count = QUESTIONS.filter(q=>q.stage===s.key).length;
+      return `<div class="stage-chip">
+        <div class="n">STAGE ${s.code}</div>
+        <div class="t">${s.name}</div>
+        <div class="c">${count} questions &middot; ${s.desc}</div>
+      </div>`;
+    }).join('');
+    $('qTotal').textContent = QUESTIONS.length;
+  }
+
+  function renderPipeline(currentStage){
+    const pipe = $('pipeline');
+    pipe.innerHTML = STAGES.map((s, i) => {
+      let cls = '';
+      if(currentStage === undefined){ cls=''; }
+      else if(s.key < currentStage) cls = 'done';
+      else if(s.key === currentStage) cls = 'active';
+      return `<div class="pipe-node ${cls}">
+        <div class="pipe-track"><div class="pipe-track-fill" style="width:${s.key < (currentStage||0) ? '100' : '0'}%"></div></div>
+        <div class="pipe-dot">${s.code}</div>
+        <div class="pipe-label">${s.name}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ---------------- Quiz flow ----------------
+  function startQuiz(){
+    order = shuffledIndices(QUESTIONS.length);
+    idx = 0;
+    answers = [];
+    $('screen-intro').classList.add('hidden');
+    $('screen-results').classList.add('hidden');
+    $('screen-quiz').classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    answeredCurrent = false;
+    const qi = order[idx];
+    const q = QUESTIONS[qi];
+    const stage = STAGES.find(s=>s.key===q.stage);
+
+    renderPipeline(q.stage);
+
+    $('qStage').textContent = `Stage ${stage.code} · ${stage.name}`;
+    $('qCount').textContent = `Question ${idx+1} of ${QUESTIONS.length}`;
+    $('qText').textContent = q.q;
+
+    const optWrap = $('qOptions');
+    optWrap.innerHTML = '';
+    const letters = ['A','B','C','D'];
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+      btn.addEventListener('click', () => selectAnswer(qi, i));
+      optWrap.appendChild(btn);
+    });
+
+    $('feedback').classList.add('hidden');
+    $('nextBtn').disabled = true;
+    $('nextBtn').textContent = (idx === QUESTIONS.length - 1) ? 'See results' : 'Next';
+  }
+
+  function selectAnswer(qi, chosenIndex){
+    if(answeredCurrent) return;
+    answeredCurrent = true;
+
+    const q = QUESTIONS[qi];
+    const isCorrect = chosenIndex === q.correct;
+    answers.push({ qi, chosen: chosenIndex, correct: isCorrect });
+
+    const opts = $('qOptions').querySelectorAll('.opt');
+    opts.forEach((btn, i) => {
+      btn.disabled = true;
+      if(i === q.correct) btn.classList.add('correct');
+      else if(i === chosenIndex) btn.classList.add('incorrect');
+      else btn.classList.add('dim');
+    });
+
+    const fb = $('feedback');
+    fb.classList.remove('hidden','correct','incorrect');
+    fb.classList.add(isCorrect ? 'correct' : 'incorrect');
+    $('fbTitle').textContent = isCorrect ? 'Correct' : 'Not quite';
+    $('fbBody').textContent = q.explain;
+    $('fbRef').textContent = `Reference: ${q.ref}`;
+
+    $('nextBtn').disabled = false;
+  }
+
+  function nextQuestion(){
+    if(idx < QUESTIONS.length - 1){
+      idx++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  // ---------------- Results ----------------
+  function showResults(){
+    $('screen-quiz').classList.add('hidden');
+    $('screen-results').classList.remove('hidden');
+    renderPipeline(STAGES.length + 1); // marks all stages done
+
+    const total = QUESTIONS.length;
+    const correctCount = answers.filter(a=>a.correct).length;
+    const pct = Math.round((correctCount/total)*100);
+
+    $('scoreRing').style.setProperty('--pct', pct);
+    $('scoreNum').textContent = pct + '%';
+
+    let headline, sub;
+    if(pct >= 85){ headline = 'Strong grasp of the ecosystem'; }
+    else if(pct >= 60){ headline = 'Solid, with a few gaps to close'; }
+    else { headline = 'Worth another pass through the material'; }
+    sub = `${correctCount} of ${total} correct. Review the flagged sections below, then revisit the study guide.`;
+    $('scoreHeadline').textContent = headline;
+    $('scoreSub').textContent = sub;
+
+    // Per-stage gauges
+    const gaugeRow = $('gaugeRow');
+    gaugeRow.innerHTML = STAGES.map(s => {
+      const stageQs = QUESTIONS.map((q,i)=>({q,i})).filter(x=>x.q.stage===s.key);
+      const stageAnswers = answers.filter(a => QUESTIONS[a.qi].stage === s.key);
+      const right = stageAnswers.filter(a=>a.correct).length;
+      const of = stageQs.length;
+      const gpct = of ? Math.round((right/of)*100) : 0;
+      return `<div class="gauge">
+        <div class="glabel">${s.code} · ${s.name}</div>
+        <div class="gtrack"><div class="gfill" style="width:${gpct}%"></div></div>
+        <div class="gscore">${right}/${of}</div>
+      </div>`;
+    }).join('');
+
+    // Review list — ordered by original question order, answered order preserved
+    const reviewList = $('reviewList');
+    reviewList.innerHTML = answers.map(a => {
+      const q = QUESTIONS[a.qi];
+      const stage = STAGES.find(s=>s.key===q.stage);
+      const yourAns = q.options[a.chosen];
+      const rightAns = q.options[q.correct];
+      return `<div class="review-item ${a.correct ? 'right' : 'wrong'}">
+        <div class="ri-top">
+          <span>${a.correct ? '✓ Correct' : '✕ Incorrect'} — Stage ${stage.code} · ${stage.name}</span>
+          <span class="ri-ref">${q.ref}</span>
+        </div>
+        <div class="ri-q">${q.q}</div>
+        <div class="ri-ans">${a.correct
+          ? `Your answer: <b>${yourAns}</b>`
+          : `Your answer: <b>${yourAns}</b> &nbsp;·&nbsp; Correct answer: <b>${rightAns}</b>`}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function restart(){
+    $('screen-results').classList.add('hidden');
+    $('screen-intro').classList.remove('hidden');
+    renderPipeline(undefined);
+  }
+
+  // ---------------- Wire up ----------------
+  $('startBtn').addEventListener('click', startQuiz);
+  $('nextBtn').addEventListener('click', nextQuestion);
+  $('restartBtn').addEventListener('click', restart);
+
+  renderStageGrid();
+  renderPipeline(undefined);
+
+})();
+</script>
 </body>
 </html>
